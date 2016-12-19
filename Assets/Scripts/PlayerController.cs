@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         if (Input.GetKey(KeyCode.RightArrow)) {
             movimientoDerecha();
         }
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (Input.GetKey(KeyCode.Space) && suelo_cerca) {
-            rb.AddForce(new Vector2(0, Salto));
+            saltar();
         }
 	}
 
@@ -41,6 +42,11 @@ public class PlayerController : MonoBehaviour {
         rb.velocity = new Vector2(-velocidad * fuerza, rb.velocity.y);
         this.transform.localScale = new Vector3(-1, 1, 1);
     }
+
+    void saltar() {
+        rb.AddForce(new Vector2(0, Salto));
+        animator.SetBool("Jump", true);
+    }
     void OnTriggerStay2D(Collider2D objeto){
         if (objeto.tag == "Suelo") {
             suelo_cerca = true;
@@ -52,5 +58,13 @@ public class PlayerController : MonoBehaviour {
             suelo_cerca = false;
         }
     }
+
+   void OnTriggerEnter2D(Collider2D objeto){
+        if (objeto.tag == "Suelo") {
+            suelo_cerca = true;
+            animator.SetBool("Jump", false);
+        }
+
+    } 
 
 }
